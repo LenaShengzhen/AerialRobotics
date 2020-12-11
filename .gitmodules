@@ -1,0 +1,3 @@
+[submodule "Motion_Planning/QuadrotorSimulation"]
+	path = Motion_Planning/QuadrotorSimulation
+	url = https://github.com/LenaShengzhen/QuadrotorSimulation.git
