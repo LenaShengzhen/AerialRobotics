@@ -2,7 +2,7 @@
 
 
 
-<img src="gifs/head.gif" alt="polyhedron-1" width="400">
+<img src="gifs/pro1/head.gif" alt="polyhedron-1" width="400">
 
 
 
@@ -27,7 +27,7 @@ MATLAB(R2019b is tested)
 
 | dijkstra                                                 | Astar                                              | Jump Point Search                              |
 | -------------------------------------------------------- | -------------------------------------------------- | ---------------------------------------------- |
-| <img src="gifs/dijkstra.gif" alt="dijkstra" width="270"> | <img src="gifs/Astar.gif" alt="Astar" width="270"> | <img src="gifs/JPS.gif" alt="JPS" width="270"> |
+| <img src="gifs/pro1/dijkstra.gif" alt="dijkstra" width="270"> | <img src="gifs/pro1/Astar.gif" alt="Astar" width="270"> | <img src="gifs/pro1/JPS.gif" alt="JPS" width="270"> |
 | 1.642271 seconds                                         | 0.755504 seconds                                   | 0.451664 seconds                               |
 
  
@@ -38,11 +38,11 @@ MATLAB(R2019b is tested)
 
 - ####  find_ellipsoid
 
-  <img src="imgs/ellipsoid-1.png" alt="polyhedron-1" width="400"><img src="imgs/ellipsoid-2.png" alt="polyhedron-2" width="400">
+  <img src="imgs/pro1/ellipsoid-1.png" alt="polyhedron-1" width="400"><img src="imgs/pro1/ellipsoid-2.png" alt="polyhedron-2" width="400">
 
 - #### find_polyhedron
 
-<img src="gifs/polyhedron-1.gif" alt="polyhedron-1" width="400"><img src="gifs/polyhedron-2.gif" alt="polyhedron-2" width="400">
+<img src="gifs/pro1/polyhedron-1.gif" alt="polyhedron-1" width="400"><img src="gifs/pro1/polyhedron-2.gif" alt="polyhedron-2" width="400">
 
 
 
@@ -52,13 +52,13 @@ Compare different Trajectory planning：
 
 - #### Trajectory 1: use Ax = b get Trajectory.
 
-<img src="gifs/closeForm.gif" alt="closeForm" width="270"><img src="imgs/close_postion.jpg" alt="closeForm" width="270"><img src="imgs/close_velocity.jpg" alt="closeForm" width="270"> 
+<img src="gifs/pro1/closeForm.gif" alt="closeForm" width="270"><img src="imgs/pro1/close_postion.jpg" alt="closeForm" width="270"><img src="imgs/pro1/close_velocity.jpg" alt="closeForm" width="270"> 
 
 The Trajectory pass every Path point.
 
 - #### Trajectory 2: use 'Quadratic Programming' get Trajectory. use corridor constraints make  Ax< b. x y z separately find minimum-snap.
 
-<img src="gifs/corridorConstraints.gif" alt="corridorConstraints" width="270"><img src="imgs/corridorConstraints_postion.jpg" alt="corridorConstraints" width="270"><img src="imgs/corridorConstraints_velocity.jpg" alt="corridorConstraints" width="270"> 
+<img src="gifs/pro1/corridorConstraints.gif" alt="corridorConstraints" width="270"><img src="imgs/pro1/corridorConstraints_postion.jpg" alt="corridorConstraints" width="270"><img src="imgs/pro1/corridorConstraints_velocity.jpg" alt="corridorConstraints" width="270"> 
 
 The Trajectory don't need to pass every Path point.
 
@@ -68,7 +68,7 @@ minSnapValue(X + Y + Z) is : 9376.0901
 
 - #### Trajectory 3: use 'Quadratic Programming' get Trajectory. use SFC make Ax < b.
 
-<img src="gifs/SFC.gif" alt="SFC" width="270"><img src="imgs/SFC_postion.jpg" alt="SFC" width="270"><img src="imgs/SFC_velocity.jpg" alt="SFC" width="270"> 
+<img src="gifs/pro1/SFC.gif" alt="SFC" width="270"><img src="imgs/pro1/SFC_postion.jpg" alt="SFC" width="270"><img src="imgs/pro1/SFC_velocity.jpg" alt="SFC" width="270"> 
 
 The Trajectory don't need to pass every Path point.
 

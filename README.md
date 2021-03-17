@@ -12,9 +12,13 @@
 
 ## Motion Planning project
 - A new method to improve path planning
+
 - Compare JPS and new method
 
 
+The detailed data is in [Motion_Planning.md](Motion_Planning.md)
+
+<img src="gifs/pro2/head.gif" alt="polyhedron-1" width="700">
 
 
 
@@ -25,11 +29,9 @@
 
 The detailed data is in [Trajectory planning.md](Trajectory_planning.md)
 
-The detailed data is in [Trajectory planning](Trajectory_planning)
 
 
-
-<img src="gifs/head.gif" alt="polyhedron-1" width="400">
+<img src="gifs/pro1/head.gif" alt="polyhedron-1" width="400">
 
 
 
