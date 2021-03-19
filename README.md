@@ -20,7 +20,7 @@ The detailed data is in [Motion_Planning.md](Motion_Planning.md)
 
 <img src="gifs/pro2/head.gif" alt="polyhedron-1" width="700">
 
-
+<img src="gifs/pro2/3dCorner-new-ys.gif" alt="3dCorner-new-ys" width="550">
 
 ## Trajectory planning project
 
