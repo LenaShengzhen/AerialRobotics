@@ -24,6 +24,18 @@ MATLAB(R2019b is tested)
 
 
 
+## Demo
+
+Run the demo map script (Only three maps have been released so far) ：
+
+```
+demo_3dCorner.m
+demo_ellipsoid.m
+demo_Z_3blocks.m
+```
+
+
+
 ### Map: 3dCorner
 
 - Same starting point and ending point

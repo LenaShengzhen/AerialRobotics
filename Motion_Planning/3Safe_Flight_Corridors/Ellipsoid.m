@@ -20,14 +20,19 @@ classdef Ellipsoid < handle
 
         % Calculate distance to the center
         function dis = dist(obj, pt)
+            dis = sqrt(obj.square_of_dist(pt));
+        end
+        
+        % Calculate the square of the distance to the center
+        function dis = square_of_dist(obj, pt)
             dd = obj.invC_ * (pt - obj.d_)';
-            dis = dot(dd, dd);   % dot(A,B) 
+            dis = dot(dd, dd);   % dot(A,B)
         end
 
         % Check if the point is inside
         function ret = inside(obj, pt)
             ret = false;
-            if (obj.dist(pt) <= 1)
+            if (obj.square_of_dist(pt) <= 1)
                 ret = true;
             end
         end
