@@ -125,9 +125,13 @@ classdef StarConvex < handle
                 obj.convex_hull(i).p1 = obj.vertices_(k(i, 1), :);
                 obj.convex_hull(i).p2 = obj.vertices_(k(i, 2), :);
                 obj.convex_hull(i).p3 = obj.vertices_(k(i, 3), :);
-                %%%%%% TODO implement normal vector of this hyperedge.
+                % Normal vector of this hyperedge. It points inside if
+                % facet vertices detemined by k are CCW
+                n_vec = cross(obj.convex_hull(i).p3 - obj.convex_hull(i).p1, ...
+                    obj.convex_hull(i).p2 - obj.convex_hull(i).p1);
+                obj.convex_hull(i).n = n_vec / norm(n_vec);
             end
-
+            obj.Edges = obj.convex_hull;
         end
 
 %         function ShrinkToConvex(obj)
