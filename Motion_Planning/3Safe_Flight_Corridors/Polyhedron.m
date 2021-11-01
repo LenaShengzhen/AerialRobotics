@@ -11,6 +11,7 @@ classdef Polyhedron < handle
 
         % Append Hyperplane
         function add(obj, plane)
+            % Does normal vector of the plane point inside or outside?
             obj.polys_{end+1} = plane;
         end
         % Check if the point is inside polyhedron,

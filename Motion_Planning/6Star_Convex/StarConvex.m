@@ -112,7 +112,7 @@ classdef StarConvex < handle
                     obj.Edges(i).p1 = obj.convex_hull(i, :);
                     obj.Edges(i).p2 = obj.convex_hull(i+1, :);
                     vec = obj.Edges(i).p2 - obj.Edges(i).p1;
-                    n_vec = [-vec(2), vec(1)];
+                    n_vec = [-vec(2), vec(1)]; % Left is the inside part
                     obj.Edges(i).n = n_vec / norm(n_vec);
                 end
             end
@@ -129,14 +129,78 @@ classdef StarConvex < handle
                 % facet vertices detemined by k are CCW
                 n_vec = cross(obj.convex_hull(i).p3 - obj.convex_hull(i).p1, ...
                     obj.convex_hull(i).p2 - obj.convex_hull(i).p1);
+                % Inverse if the vector point to the other side
+                if dot(n_vec, obj.Po_ - obj.convex_hull(i).p1) < -obj.epsilon_
+                    n_vec = -n_vec;
+                end
                 obj.convex_hull(i).n = n_vec / norm(n_vec);
             end
             obj.Edges = obj.convex_hull;
         end
 
-%         function ShrinkToConvex(obj)
-%             
-%         end
+        function ShrinkToConvex(obj)
+            % Shrink the convex hull to pointcloud-free convex region
+            obj.A = zeros(size(obj.Edges, 2), obj.dim);
+            obj.b = zeros(size(obj.Edges, 2), 1);
+            for i = 1: size(obj.Edges, 2)
+                polyhedron = Polyhedron();
+                base = Hyperplane(obj.Edges(i).p1,...
+                    obj.Edges(i).n);
+                polyhedron.add(base);
+                if obj.dim == 2 % 2d dimension
+                    % Add first edge
+                    vec1 = obj.Edges(i).p1 - obj.Po_;
+                    n_vec1 = [-vec1(2), vec1(1)]; % Left is the inside part
+                    n1 = n_vec1 / norm(n_vec1);
+                    polyhedron.add(Hyperplane(obj.Po_, n1));
+                    % Add second edge
+                    vec2 = obj.Po_ - obj.Edges(i).p2;
+                    n_vec2 = [-vec2(2), vec2(1)];
+                    n2 = n_vec2 / norm(n_vec2);
+                    polyhedron.add(Hyperplane(obj.Po_, n2));
+                else % 3d dimension
+                    % Add first edge
+                    n1 = cross(obj.Edges(i).p2 - obj.Po_, ...
+                        obj.Edges(i).p1 - obj.Po_);
+                    n1 = n1 / norm(n1);
+                    if dot(n1, obj.Edges(i).p3 - obj.Po_) < -obj.epsilon_
+                        n1 = -n1;
+                    end
+                    polyhedron.add(Hyperplane(obj.Po_, n1));
+                    % Add second edge
+                    n2 = cross(obj.Edges(i).p3 - obj.Po_, ...
+                        obj.Edges(i).p2 - obj.Po_);
+                    n2 = n2 / norm(n2);
+                    if dot(n2, obj.Edges(i).p1 - obj.Po_) < -obj.epsilon_
+                        n2 = -n2;
+                    end
+                    polyhedron.add(Hyperplane(obj.Po_, n2));
+                    % Add third edge
+                    n3 = cross(obj.Edges(i).p1 - obj.Po_, ...
+                        obj.Edges(i).p3 - obj.Po_);
+                    n3 = n3 / norm(n3);
+                    if dot(n3, obj.Edges(i).p2 - obj.Po_) < -obj.epsilon_
+                        n3 = -n3;
+                    end
+                    polyhedron.add(Hyperplane(obj.Po_, n3));
+                end
+                % Iterate every point inside, find the furthest to base
+                furthest_dis = -1;
+                pi = obj.Edges(i).p1;
+                for j = 1: size(obj.P_in_, 1)
+                    p_in = obj.P_in_(j,:);
+                    if (polyhedron.inside(p_in)) % CHECK IF IT NEEDS TO BE REVERSED
+                        dis = base.signed_dist(p_in);
+                        if (dis >= furthest_dis)
+                            pi = p_in;
+                            furthest_dis = dis;
+                        end
+                    end
+                end
+                obj.A(i, :) = base.n_;
+                obj.b(i) = dot(base.n_, pi);
+            end
+        end
 
         function PlotConvexHull(obj)
             plot([obj.convex_hull(1, :), obj.convex_hull(1, 1)], ...

@@ -9,5 +9,7 @@ function [A, b] = LargeConvexPolytopes(pointclouds_xyz, pos, R)
     k = convhull(flipping_xyz);
     sc = StarConvex(pointclouds_xyz(k, 1), pointclouds_xyz(k, 2), pos, pointclouds_xyz(k, 3));
     sc.ConstructConvexFromStar();
-
+    sc.ShrinkToConvex();
+    A = sc.A;
+    b = sc.b;
 end
