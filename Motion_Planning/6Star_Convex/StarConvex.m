@@ -43,72 +43,75 @@ classdef StarConvex < handle
 
         function ConstructConvexFromStar(obj)
             if obj.dim == 2
-                % Graham Scan, reference
-                % http://www.cosy.sbg.ac.at/~held/teaching/compgeo/cg_study.pdf
-                
-                % Find the bottommost point
-                ymin = obj.vertices_(1, 2);
-                min_ind = 1;
-                for i = 2:size(obj.vertices_,1)
-                    y = obj.vertices_(i, 2);
-                    % Pick the bottom-most or choose the left most point in
-                    % case of tie
-                    if y < ymin || (y == ymin && obj.vertices_(i, 1) < ...
-                            obj.vertices_(min_ind, 1))
-                        ymin = obj.vertices_(i, 2);
-                        min_ind = i;
-                    end
-                end
-                obj.vertices_ = circshift(obj.vertices_, [min_ind, 0]);
-                
-                obj.convex_hull = obj.vertices_;
-    
-                cur_ind = 1;
-                obj.P_in_ = [];
-                init_pt = obj.convex_hull(cur_ind, :);
-                done = false;
-                while done == false
-                    if cur_ind == 1
-                        pre_ind = size(obj.convex_hull, 1);
-                        next_ind = cur_ind + 1;
-                    elseif cur_ind == size(obj.convex_hull, 1)
-                        pre_ind = cur_ind - 1;
-                        next_ind = 1;
-                    else
-                        pre_ind = cur_ind - 1;
-                        next_ind = cur_ind + 1;
-                    end
-                    pre_pt = obj.convex_hull(pre_ind, :);
-                    cur_pt = obj.convex_hull(cur_ind, :);
-                    next_pt = obj.convex_hull(next_ind, :);
-                    v1 = cur_pt - pre_pt;
-                    v2 = next_pt - cur_pt;
-                    cross_turn = v1(1)*v2(2) - v1(2)*v2(1);
-    %                 fprintf("Pre index is %d, current index is %d, next index is %d \n", pre_ind, cur_ind, next_ind);
-    %                 fprintf("Pre pt is [%.2f, %.2f, %.2f], cur pt is [%.2f, %.2f, %.2f]," + ...
-    %                     " next pt is [%.2f, %.2f, %.2f]", pre_pt(1), pre_pt(2), pre_pt(3),...
-    %                     cur_pt(1), cur_pt(2), cur_pt(3), next_pt(1), next_pt(2), next_pt(3));
-    %                 fprintf("crossturn is %f \n", cross_turn(3));
-                    if cross_turn > obj.epsilon_ % left turn if CCW
-                        cur_ind = mod(cur_ind, size(obj.convex_hull, 1)) + 1;
-                        if norm(obj.convex_hull(cur_ind, :) - init_pt) < obj.epsilon_
-                            done = true;
-                        end
-                    elseif cross_turn < -obj.epsilon_ % right turn if CCW
-                        obj.P_in_(end+1, :) = obj.convex_hull(cur_ind, :);
-                        obj.convex_hull(cur_ind, :) = [];
-                        % start from bottom most and left point guarantee 
-                        % cur_ind is not 1
-                        cur_ind = cur_ind - 1;
-                    else % collinear
-                        obj.convex_hull(cur_ind, :) = [];
-                        if norm(obj.convex_hull(cur_ind, :)-init_pt) < obj.epsilon_
-                            done = true;
-                        end
-                    end
-                end
-                obj.convex_hull(end+1, :) = obj.convex_hull(1, :);
-                
+%                 % Graham Scan, reference
+%                 % http://www.cosy.sbg.ac.at/~held/teaching/compgeo/cg_study.pdf
+%                 
+%                 % Find the bottommost point
+%                 ymin = obj.vertices_(1, 2);
+%                 min_ind = 1;
+%                 for i = 2:size(obj.vertices_,1)
+%                     y = obj.vertices_(i, 2);
+%                     % Pick the bottom-most or choose the left most point in
+%                     % case of tie
+%                     if y < ymin || (y == ymin && obj.vertices_(i, 1) < ...
+%                             obj.vertices_(min_ind, 1))
+%                         ymin = obj.vertices_(i, 2);
+%                         min_ind = i;
+%                     end
+%                 end
+%                 obj.vertices_ = circshift(obj.vertices_, [min_ind, 0]);
+%                 
+%                 obj.convex_hull = obj.vertices_;
+%     
+%                 cur_ind = 1;
+%                 obj.P_in_ = [];
+%                 init_pt = obj.convex_hull(cur_ind, :);
+%                 done = false;
+%                 while done == false
+%                     if cur_ind == 1
+%                         pre_ind = size(obj.convex_hull, 1);
+%                         next_ind = cur_ind + 1;
+%                     elseif cur_ind == size(obj.convex_hull, 1)
+%                         pre_ind = cur_ind - 1;
+%                         next_ind = 1;
+%                     else
+%                         pre_ind = cur_ind - 1;
+%                         next_ind = cur_ind + 1;
+%                     end
+%                     pre_pt = obj.convex_hull(pre_ind, :);
+%                     cur_pt = obj.convex_hull(cur_ind, :);
+%                     next_pt = obj.convex_hull(next_ind, :);
+%                     v1 = cur_pt - pre_pt;
+%                     v2 = next_pt - cur_pt;
+%                     cross_turn = v1(1)*v2(2) - v1(2)*v2(1);
+%     %                 fprintf("Pre index is %d, current index is %d, next index is %d \n", pre_ind, cur_ind, next_ind);
+%     %                 fprintf("Pre pt is [%.2f, %.2f, %.2f], cur pt is [%.2f, %.2f, %.2f]," + ...
+%     %                     " next pt is [%.2f, %.2f, %.2f]", pre_pt(1), pre_pt(2), pre_pt(3),...
+%     %                     cur_pt(1), cur_pt(2), cur_pt(3), next_pt(1), next_pt(2), next_pt(3));
+%     %                 fprintf("crossturn is %f \n", cross_turn(3));
+%                     if cross_turn > obj.epsilon_ % left turn if CCW
+%                         cur_ind = mod(cur_ind, size(obj.convex_hull, 1)) + 1;
+%                         if norm(obj.convex_hull(cur_ind, :) - init_pt) < obj.epsilon_
+%                             done = true;
+%                         end
+%                     elseif cross_turn < -obj.epsilon_ % right turn if CCW
+%                         obj.P_in_(end+1, :) = obj.convex_hull(cur_ind, :);
+%                         obj.convex_hull(cur_ind, :) = [];
+%                         % start from bottom most and left point guarantee 
+%                         % cur_ind is not 1
+%                         cur_ind = cur_ind - 1;
+%                     else % collinear
+%                         obj.convex_hull(cur_ind, :) = [];
+%                         if norm(obj.convex_hull(cur_ind, :)-init_pt) < obj.epsilon_
+%                             done = true;
+%                         end
+%                     end
+%                 end
+%                 obj.convex_hull(end+1, :) = obj.convex_hull(1, :);
+                k = convhull(obj.vertices_, 'Simplify', true);
+                ind_in = setdiff(1:size(obj.vertices_, 1), k);
+                obj.P_in_ = obj.vertices_(ind_in, :);
+                obj.convex_hull = obj.vertices_(k, :);
                 obj.Edges = repmat(struct, 1, size(obj.convex_hull, 1)-1);
                 for i = 1: size(obj.convex_hull, 1)-1
                     obj.Edges(i).p1 = obj.convex_hull(i, :);
@@ -117,28 +120,27 @@ classdef StarConvex < handle
                     n_vec = [-vec(2), vec(1)]; % Left is the inside part
                     obj.Edges(i).n = n_vec / norm(n_vec);
                 end
-            end
-            disp(obj.vertices_);
-
-            k = convhull(obj.vertices_, 'Simplify',true);
-            ind_in = setdiff(1:size(obj.vertices_, 1), reshape(k, 1, 3 * size(k, 1)));
-            obj.P_in_ = obj.vertices_(ind_in, :);
-            obj.convex_hull = repmat(struct, 1, size(k, 1));
-            for i = 1: size(k, 1)
-                obj.convex_hull(i).p1 = obj.vertices_(k(i, 1), :);
-                obj.convex_hull(i).p2 = obj.vertices_(k(i, 2), :);
-                obj.convex_hull(i).p3 = obj.vertices_(k(i, 3), :);
-                % Normal vector of this hyperedge. It points inside if
-                % facet vertices detemined by k are CCW
-                n_vec = cross(obj.convex_hull(i).p3 - obj.convex_hull(i).p1, ...
-                    obj.convex_hull(i).p2 - obj.convex_hull(i).p1);
-                % Inverse if the vector point to the other side
-                if dot(n_vec, obj.Po_ - obj.convex_hull(i).p1) < -obj.epsilon_
-                    n_vec = -n_vec;
+            else
+                k = convhull(obj.vertices_, 'Simplify',true);
+                ind_in = setdiff(1:size(obj.vertices_, 1), reshape(k, 1, 3 * size(k, 1)));
+                obj.P_in_ = obj.vertices_(ind_in, :);
+                obj.convex_hull = repmat(struct, 1, size(k, 1));
+                for i = 1: size(k, 1)
+                    obj.convex_hull(i).p1 = obj.vertices_(k(i, 1), :);
+                    obj.convex_hull(i).p2 = obj.vertices_(k(i, 2), :);
+                    obj.convex_hull(i).p3 = obj.vertices_(k(i, 3), :);
+                    % Normal vector of this hyperedge. It points inside if
+                    % facet vertices detemined by k are CCW
+                    n_vec = cross(obj.convex_hull(i).p3 - obj.convex_hull(i).p1, ...
+                        obj.convex_hull(i).p2 - obj.convex_hull(i).p1);
+                    % Inverse if the vector point to the other side
+                    if dot(n_vec, obj.Po_ - obj.convex_hull(i).p1) < -obj.epsilon_
+                        n_vec = -n_vec;
+                    end
+                    obj.convex_hull(i).n = n_vec / norm(n_vec);
                 end
-                obj.convex_hull(i).n = n_vec / norm(n_vec);
+                obj.Edges = obj.convex_hull;
             end
-            obj.Edges = obj.convex_hull;
         end
 
         function ShrinkToConvex(obj)

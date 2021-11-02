@@ -7,14 +7,15 @@ function [A, b] = LargeConvexPolytopes(pointclouds_xyz, pos, R)
 
     pointclouds_xyz = AddSurroundingPoints(pointclouds_xyz, pos, R);
     flipping_xyz = zeros(size(pointclouds_xyz));
-    for i = 1: size(pointclouds_xyz, 2)
+    for i = 1: size(pointclouds_xyz, 1)
         flipping_xyz(i, :) = SphereFlipping(pos, pointclouds_xyz(i, :), R);
     end
     k = convhull(flipping_xyz);
     if dim == 2
         sc = StarConvex(pointclouds_xyz(k, 1), pointclouds_xyz(k, 2), pos);
     else
-        sc = StarConvex(pointclouds_xyz(k, 1), pointclouds_xyz(k, 2), pos, pointclouds_xyz(k, 3));
+        sc = StarConvex(pointclouds_xyz(k, 1), pointclouds_xyz(k, 2),...
+            pos, pointclouds_xyz(k, 3));
     end
     sc.ConstructConvexFromStar();
     sc.ShrinkToConvex();
@@ -30,9 +31,9 @@ function p_xyz = AddSurroundingPoints(pointclouds_xyz, pos, R)
         % Add four points as a square.
         rc = R / sqrt(2);
         pointclouds_xyz(end+1, :) = [pos(1)+rc, pos(2)+rc];
-        pointclouds_xyz(end+1, :) = [pos(1)+rc, pos(2)-rc];
-        pointclouds_xyz(end+1, :) = [pos(1)-rc, pos(2)-rc];
         pointclouds_xyz(end+1, :) = [pos(1)-rc, pos(2)+rc];
+        pointclouds_xyz(end+1, :) = [pos(1)-rc, pos(2)-rc];
+        pointclouds_xyz(end+1, :) = [pos(1)+rc, pos(2)-rc];
     else
         % Add eight points as a cube.
         rc = R / sqrt(3);
