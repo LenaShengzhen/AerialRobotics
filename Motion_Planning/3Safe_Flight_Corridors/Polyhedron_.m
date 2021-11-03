@@ -1,10 +1,10 @@
-classdef Polyhedron < handle
+classdef Polyhedron_ < handle
     properties               
         polys_;    
         epsilon_;  
     end
     methods                 
-        function obj = Polyhedron()   
+        function obj = Polyhedron_()   
             obj.polys_ = cell(0);
             obj.epsilon_ = 1e-10;
         end

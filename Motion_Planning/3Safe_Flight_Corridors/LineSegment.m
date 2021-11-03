@@ -27,7 +27,7 @@ classdef LineSegment < handle
         end		
 
         function set_obs(obj, obs)
-            Vs = Polyhedron();
+            Vs = Polyhedron_();
             obj.add_local_bbox(Vs);		
             obj.obs_ = Vs.points_inside(obs);	
         end		

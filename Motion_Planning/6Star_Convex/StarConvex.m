@@ -148,7 +148,7 @@ classdef StarConvex < handle
             obj.A = zeros(size(obj.Edges, 2), obj.dim);
             obj.b = zeros(size(obj.Edges, 2), 1);
             for i = 1: size(obj.Edges, 2)
-                polyhedron = Polyhedron();
+                polyhedron = Polyhedron_();
                 base = Hyperplane(obj.Edges(i).p1,...
                     obj.Edges(i).n);
                 polyhedron.add(base);
