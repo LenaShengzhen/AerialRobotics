@@ -122,7 +122,7 @@ classdef StarConvex < handle
                 end
             else
                 k = convhull(obj.vertices_, 'Simplify',true);
-                ind_in = setdiff(1:size(obj.vertices_, 1), reshape(k, 1, 3 * size(k, 1)));
+                ind_in = setdiff(1:size(obj.vertices_, 1), unique(k));
                 obj.P_in_ = obj.vertices_(ind_in, :);
                 obj.convex_hull = repmat(struct, 1, size(k, 1));
                 for i = 1: size(k, 1)
@@ -191,42 +191,84 @@ classdef StarConvex < handle
                 end
                 % Iterate every point inside, find the furthest to base
                 furthest_dis = -1;
-                pi = obj.Edges(i).p1;
+                p_i = obj.Edges(i).p1;
                 for j = 1: size(obj.P_in_, 1)
                     p_in = obj.P_in_(j,:);
                     if (polyhedron.inside(p_in)) % CHECK IF IT NEEDS TO BE REVERSED
                         dis = base.signed_dist(p_in);
                         if (dis >= furthest_dis)
-                            pi = p_in;
+                            p_i = p_in;
                             furthest_dis = dis;
                         end
                     end
                 end
-                obj.A(i, :) = base.n_;
-                obj.b(i) = dot(base.n_, pi);
+                % The normal vector in the paper is pointing to outside.
+                obj.A(i, :) = -base.n_;
+                obj.b(i) = dot(-base.n_, p_i);
             end
         end
 
         function PlotConvexHull(obj)
-            plot([obj.convex_hull(1, :), obj.convex_hull(1, 1)], ...
-                [obj.convex_hull(2, :), obj.convex_hull(2, 1)], 'k*--');
+            plot(obj.convex_hull(:, 1), obj.convex_hull(:, 2), 'k*--');
         end
 
         function PlotVertices(obj)
-            plot([obj.vertices_(1, :), obj.vertices_(1, 1)], ...
-                [obj.vertices_(2, :), obj.vertices_(2, 1)], 'b*-');
+            plot([obj.vertices_(:, 1); obj.vertices_(1, 1)], ...
+                [obj.vertices_(:, 2); obj.vertices_(1, 2)], 'b*-');
         end
 
         function PlotInterPoint(obj)
-            plot(obj.P_in_(1, :), obj.P_in_(2, :), 'ro');
+            plot(obj.P_in_(:, 1), obj.P_in_(:, 2), 'ro');
+        end
+
+        function PlotResults(obj)
+            upper = max(obj.vertices_);
+            lower = min(obj.vertices_);
+            range = upper - lower;
+            upper = upper + abs(range * 0.1);
+            lower = lower - abs(range * 0.1);
+            if obj.dim == 2
+                [xx, yy] = meshgrid(linspace(lower(1), upper(1), 13),...
+                    linspace(lower(2), upper(2), 13));
+                region = ones(size(xx));
+                for i=1:size(obj.b, 1)
+                    sub_region = obj.A(i, 1).*xx + obj.A(i, 2).*yy <= obj.b(i);
+                    region = region & sub_region;
+                end
+                surf(xx,yy,double(region));
+                colorbar;
+                view(0,90);
+            else
+                [xx, yy, zz] = meshgrid(linspace(lower(1), upper(1), 13),...
+                    linspace(lower(2), upper(2), 13),...
+                    linspace(lower(3), upper(3), 13));
+                region = ones(size(xx));
+                for i=1:size(obj.b, 1)
+                    sub_region = obj.A(i, 1).*xx + obj.A(i, 2).*yy +...
+                        obj.A(i, 3).*zz <= obj.b(i);
+                    region = region & sub_region;
+                end
+
+                scatter3(xx(region), yy(region), zz(region));
+%                 p=patch(isosurface(region, 0));
+%                 set(p,'FaceColor','red','EdgeColor','none');
+                daspect([1,1,1])
+                view(3); axis equal
+                camlight
+                lighting gouraud
+                grid on
+            end
         end
 
         function VisualizeResult(obj)
             figure;
             hold on
-            obj.PlotVertices();
-            obj.PlotConvexHull();
-            obj.PlotInterPoint();
+            if obj.dim == 2
+                obj.PlotVertices();
+                obj.PlotConvexHull();
+                obj.PlotInterPoint();
+            end
+            obj.PlotResults();
             hold off;
         end
     end

@@ -17,9 +17,9 @@ classdef Polyhedron_ < handle
         % Check if the point is inside polyhedron,
         function isinside = inside(obj, pt)
             isinside = false;
-            [len, ~]=size(obj.polys_);
+            [~, len]=size(obj.polys_);
                 for i = 1 : len
-                    if(obj.polys_{i}.signed_dist(pt) > obj.epsilon_)
+                    if(obj.polys_{i}.signed_dist(pt) < -obj.epsilon_)
                         return;
                     end
                 end

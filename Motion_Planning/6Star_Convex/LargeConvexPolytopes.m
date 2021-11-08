@@ -12,8 +12,11 @@ function [A, b] = LargeConvexPolytopes(pointclouds_xyz, pos, R)
     end
     k = convhull(flipping_xyz);
     if dim == 2
-        sc = StarConvex(pointclouds_xyz(k, 1), pointclouds_xyz(k, 2), pos);
+        k = k(1:end-1);
+        sc = StarConvex(pointclouds_xyz(k, 1),...
+            pointclouds_xyz(k, 2), pos);
     else
+        k = unique(k);
         sc = StarConvex(pointclouds_xyz(k, 1), pointclouds_xyz(k, 2),...
             pos, pointclouds_xyz(k, 3));
     end
@@ -21,6 +24,7 @@ function [A, b] = LargeConvexPolytopes(pointclouds_xyz, pos, R)
     sc.ShrinkToConvex();
     A = sc.A;
     b = sc.b;
+    sc.VisualizeResult();
 end
 
 function p_xyz = AddSurroundingPoints(pointclouds_xyz, pos, R)
