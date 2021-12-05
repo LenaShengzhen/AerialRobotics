@@ -2,7 +2,7 @@ start = {[]};
 stop  = {[]};
 
 if (~exist('demoActivate')) || (demoActivate == false)
-    choose_map  = 2;
+    choose_map  = 1;
 end
 demoActivate    = false;
 if (~exist('path_id'))
@@ -17,11 +17,11 @@ time_allocation.type = 'trapzoidSpeed';
 
 switch choose_map
    case 1   %% 3 blocks
-      map.load_map('0Maps/ellipsoid.txt', 0.2, 0.2, 0.1);
-      start = {[1.5 0.2 0.2]};
-      stop  = {[1.5 2.0 1.9]};
+      map.load_map('0Maps/forest_environment.txt', 0.2, 0.2, 0.1);
+      start = {[1.2 0 0]};
+      stop  = {[1.5 5 2]};
       speed = 1;
-      acc   = 2; 
+      acc   = 1; 
    case 2
       map.load_map('0Maps/3dCorner.txt', 0.1, 0.1, 0.1);
       start = {[2.6  1.0 1.0]};
@@ -37,7 +37,7 @@ switch choose_map
       start = {[-1 1.5 2]};
       stop  = {[11 1.5 1]};
       acc   = 2;
-      if path_id == 4
+      if path_id == 2
           speed = 1.4;      %for path_id = 4, time = 12.9343, snap = 58.376, fly use  12.45s
       else
           speed = 1.10423;  %for path_id = 2, time = 12.9343, snap = 300.3111, fly use  13.9s  
