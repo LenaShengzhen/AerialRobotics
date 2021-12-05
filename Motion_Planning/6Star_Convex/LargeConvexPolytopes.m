@@ -24,7 +24,7 @@ function [A, b] = LargeConvexPolytopes(pointclouds_xyz, pos, R)
     sc.ShrinkToConvex();
     A = sc.A;
     b = sc.b;
-    sc.VisualizeResult();
+%     sc.VisualizeResult();
 end
 
 function p_xyz = AddSurroundingPoints(pointclouds_xyz, pos, R)

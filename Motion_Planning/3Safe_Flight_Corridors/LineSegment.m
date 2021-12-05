@@ -144,7 +144,7 @@ classdef LineSegment < handle
         end
 
         function find_polyhedron(obj)
-            Vs = Polyhedron();
+            Vs = Polyhedron_();
             obs_remain = obj.obs_;
             while(length(obs_remain))
                 plane = obj.ellipsoid_.closest_hyperplane(obs_remain);

@@ -39,6 +39,12 @@ tic
 decomps{1} = SFC_3D(path{2}, obps, map.boundary); %  call SFC
 toc
 
+disp('JPS -> StarConvexMethod time is : ');
+tic
+[A, b] = SCMFromPath(path{2}, obps, map.boundary); 
+toc
+
+
 path{path_id}
 
 
