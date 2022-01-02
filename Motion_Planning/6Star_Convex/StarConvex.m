@@ -205,6 +205,15 @@ classdef StarConvex < handle
                 % The normal vector in the paper is pointing to outside.
                 obj.A(i, :) = -base.n_;
                 obj.b(i) = dot(-base.n_, p_i);
+%                 if i == 12
+%                     ;
+%                 end
+%                 disp("Current point Po is: ");
+%                 disp(obj.Po_);
+%                 if dot(obj.A(i, :), obj.Po_) >= obj.b(i)
+%                     disp("Shrink the edge inside the pos.");
+%                 end
+                assert(dot(obj.A(i, :), obj.Po_) < obj.b(i), "Shrink the edge inside the pos.");
             end
         end
 

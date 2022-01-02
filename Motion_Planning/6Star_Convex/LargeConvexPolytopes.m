@@ -5,26 +5,36 @@ function [A, b] = LargeConvexPolytopes(pointclouds_xyz, pos, R)
     dim = length(pos);
     assert(dim == 2 || dim == 3, "Wrong dimension! Check input data!");
 
-    pointclouds_xyz = AddSurroundingPoints(pointclouds_xyz, pos, R);
-    flipping_xyz = zeros(size(pointclouds_xyz));
-    for i = 1: size(pointclouds_xyz, 1)
-        flipping_xyz(i, :) = SphereFlipping(pos, pointclouds_xyz(i, :), R);
+    points_inside = FindInsidePoints(pointclouds_xyz, pos, R);
+
+%     pointclouds_xyz = AddSurroundingPoints(pointclouds_xyz, pos, R);
+    flipping_xyz = zeros(size(points_inside));
+    for i = 1: size(points_inside, 1)
+        flipping_xyz(i, :) = SphereFlipping(pos, points_inside(i, :), R);
     end
     k = convhull(flipping_xyz);
     if dim == 2
         k = k(1:end-1);
-        sc = StarConvex(pointclouds_xyz(k, 1),...
-            pointclouds_xyz(k, 2), pos);
+        sc = StarConvex(points_inside(k, 1),...
+            points_inside(k, 2), pos);
     else
         k = unique(k);
-        sc = StarConvex(pointclouds_xyz(k, 1), pointclouds_xyz(k, 2),...
-            pos, pointclouds_xyz(k, 3));
+        sc = StarConvex(points_inside(k, 1), points_inside(k, 2),...
+            pos, points_inside(k, 3));
     end
     sc.ConstructConvexFromStar();
     sc.ShrinkToConvex();
     A = sc.A;
     b = sc.b;
 %     sc.VisualizeResult();
+end
+
+function points_inside = FindInsidePoints(pointclouds_xyz, pos, R)
+    % Find all the points inside the circle with R as radius and pos as the
+    % center.
+    distance = vecnorm(pointclouds_xyz - pos, 2, 2);
+    points_inside = pointclouds_xyz(distance <= R, :);
+    points_inside = AddSurroundingPoints(points_inside, pos, R);
 end
 
 function p_xyz = AddSurroundingPoints(pointclouds_xyz, pos, R)
@@ -49,6 +59,7 @@ function p_xyz = AddSurroundingPoints(pointclouds_xyz, pos, R)
         pointclouds_xyz(end+1, :) = [pos(1)-rc, pos(2)-rc, pos(3)+rc];
         pointclouds_xyz(end+1, :) = [pos(1)-rc, pos(2)-rc, pos(3)-rc];
         pointclouds_xyz(end+1, :) = [pos(1)+rc, pos(2)+rc, pos(3)+rc];
+%         disp(pointclouds_xyz(end-7:end, :));
     end
     p_xyz = pointclouds_xyz;
 end
